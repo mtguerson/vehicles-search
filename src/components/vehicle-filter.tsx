@@ -20,7 +20,9 @@ export default function VehicleFilter() {
     year: null,
   });
   const [loading, setLoading] = useState(true);
+
   const router = useRouter();
+
   const { toast } = useToast();
 
   const currentYear = new Date().getFullYear();
@@ -30,15 +32,20 @@ export default function VehicleFilter() {
   );
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
+
     const fetchMakes = async () => {
       try {
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/GetMakesForVehicleType/car?format=json`,
         );
+
         const data = await response.json();
+
         setMakes(data.Results);
       } catch (error) {
         console.error("Error fetching makes:", error);
+
         toast({
           title: "Error",
           description: "Failed to load vehicle makes. Please try again.",
